@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    script(type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js")
+    script(type='text/javascript' src="/client/users-client.js")
+    title UserModule
+  body
+    h2 ADD
+    div
+      p usermoddule
+      form( id="add" )
+        input( type="text" name="username" class="add" id="add-name")
+        input( type="text" name="email" class="add" id="add-email")
+        input( type="text" name="color" class="add" id="add-color")
+        input( type="submit" id="btn-add" value="ADD" )
+
+    h2 edit
+    div( id="added" )
