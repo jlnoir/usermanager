@@ -22,16 +22,17 @@ router.get('/all', function(req, res) {
     });
 });
 
-router.get('/:id', function(req, res) {
+router.get('/:_id', function(req, res) {
     User.findById(req.params.id, function (err, post) {
-        if (err) return next(err);
+        if (err) console.log(err);
         res.json(post);
     });
 });
 
 router.put('/:id', function(req, res) {
     User.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
-        if (err) return next(err);
+        if (err) console.log(err);
+        console.log(post)
         res.json(post);
     });
 });

@@ -3,7 +3,7 @@
  */
 
 ModuleUser = (function ($) {
-    var observer, type, action, data = {};
+    var observer, type, action, data = {}, idReplace;
 
     // Object User
     function User() {
@@ -42,33 +42,55 @@ ModuleUser = (function ($) {
             params.success = function (data) {
                 action == "add" ? add(data) : edit(data);
             };
-            console.log(data);
             params.url =  action == "add" ? "/users/" : "/users/"+ data[Object.keys(data)[3]];
+            console.log(data);
             console.log(params);
         }
         $.ajax(params);
     }
 
     function add(data){
-        var divCreate, p, form, input;
-        divCreate = document.createElement('div');
+        var divCreate, input, inputs;
         input = document.createElement('input');
         input.type = "submit";
         input.value = "edit";
+        inputs = template(data,input);
+        document.getElementById('added').appendChild(inputs);
+        editListener(idReplace);
+    }
+
+    function template(data,input){
+        var p, form;
         form = document.createElement('form');
-        form.id = "edit";
+        console.log(data);
+        form.id = data[Object.keys(data)[(Object.keys(data).length - 1)]];
+        idReplace = form.id;
         form.appendChild(input);
-        for(var i = 0; Object.keys(data).length > i; i++ ) {
+        for(var i = 0; Object.keys(data).length > i ; i++ ) {
             p = document.createElement('input');
             p.innerHTML = Object.keys(data)[i];
+            p.name = Object.keys(data)[i];
             p.value = data[Object.keys(data)[i]];
+            p.style = "border:none";
             p.className ="edit";
+            if (Object.keys(data).length -1 == i ){
+                p.name = "id";
+                p.style = "border:none; display:none;";
+            }
             form.appendChild(p);
         }
-        divCreate.appendChild(form);
-        console.log(divCreate);
-        document.getElementById('added').appendChild(divCreate);
-        editListener();
+        return form;
+    }
+
+    function edit(data){
+        var elemReplace, input, newinputs;
+        input = document.createElement('input');
+        input.type = "submit";
+        input.value = "edit";
+
+        elemReplace = document.getElementById(idReplace);
+        newinputs = template(data, input);
+        document.getElementById('added').replaceChild(newinputs, elemReplace);
     }
 
     //function add(data){
@@ -87,6 +109,7 @@ ModuleUser = (function ($) {
 
     function check(callback) {
         var input = document.getElementsByClassName(action);
+        data = {};
         for (var i = 0; input.length > i; i++) {
             if (input[i].value.length < 1 || input[i].value === 'undefined' || input[i].value === '') {
                 console.log(input[i].name + "est vide");
@@ -107,10 +130,10 @@ ModuleUser = (function ($) {
         });
     });
 
-    function editListener() {
+    function editListener(id) {
         var user = new User();
         
-        document.getElementById("edit").addEventListener("submit", function (e) {
+        document.getElementById(id).addEventListener("submit", function (e) {
             e.preventDefault();
             user.editUser();
         });
