@@ -30,10 +30,18 @@ router.get('/:_id', function(req, res) {
 });
 
 router.put('/:id', function(req, res) {
-    User.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
-        if (err) console.log(err);
-        console.log(post)
-        res.json(post);
+    User.findById(req.params.id, function(err, user) {
+        if (err) throw err;
+
+        user.username = req.body.username;
+        user.email = req.body.email;
+        user.color = req.body.color;
+
+        user.save(function(err) {
+            if (err) throw err;
+            res.json(user);
+        });
+
     });
 });
 

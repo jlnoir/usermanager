@@ -42,9 +42,7 @@ ModuleUser = (function ($) {
             params.success = function (data) {
                 action == "add" ? add(data) : edit(data);
             };
-            params.url =  action == "add" ? "/users/" : "/users/"+ data[Object.keys(data)[3]];
-            console.log(data);
-            console.log(params);
+            params.url =  action == "add" ? "/users/" : "/users/"+ idReplace;
         }
         $.ajax(params);
     }
@@ -62,22 +60,19 @@ ModuleUser = (function ($) {
     function template(data,input){
         var p, form;
         form = document.createElement('form');
-        console.log(data);
-        form.id = data[Object.keys(data)[(Object.keys(data).length - 1)]];
+        form.id = data._id;
         idReplace = form.id;
         form.appendChild(input);
         for(var i = 0; Object.keys(data).length > i ; i++ ) {
-            p = document.createElement('input');
-            p.innerHTML = Object.keys(data)[i];
-            p.name = Object.keys(data)[i];
-            p.value = data[Object.keys(data)[i]];
-            p.style = "border:none";
-            p.className ="edit";
-            if (Object.keys(data).length -1 == i ){
-                p.name = "id";
-                p.style = "border:none; display:none;";
+            if (Object.keys(data)[i] !== "_id" && Object.keys(data)[i] !== "__v"){
+                p = document.createElement('input');
+                p.innerHTML = Object.keys(data)[i];
+                p.name = Object.keys(data)[i];
+                p.value = data[Object.keys(data)[i]];
+                p.style = "border:none";
+                p.className ="edit";
+                form.appendChild(p);
             }
-            form.appendChild(p);
         }
         return form;
     }
@@ -89,6 +84,7 @@ ModuleUser = (function ($) {
         input.value = "edit";
 
         elemReplace = document.getElementById(idReplace);
+        console.log(elemReplace);
         newinputs = template(data, input);
         document.getElementById('added').replaceChild(newinputs, elemReplace);
     }
@@ -136,6 +132,7 @@ ModuleUser = (function ($) {
         document.getElementById(id).addEventListener("submit", function (e) {
             e.preventDefault();
             user.editUser();
+            console.log("ok");
         });
     }
 
